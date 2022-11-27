@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.mkuchciak.diet_app.product.Product;
 import pl.mkuchciak.diet_app.product.ProductRepository;
-import pl.mkuchciak.diet_app.product.nutrients.Nutrients;
+import pl.mkuchciak.diet_app.product.nutrients.MacroNutrients;
 import pl.mkuchciak.diet_app.user.UserRepository;
 
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,11 +22,10 @@ public class MealService {
     MealDtoConverter mealDtoConverter;
 
 
-    public MealDto findMealById(Long id){
+    public MealDto getMealById(Long id){
         Optional<Meal> mealOpt = mealRepository.findById(id);
-        MealDto mealDto = mealOpt.map(mealDtoConverter::convertToDto)
-                .orElseGet(MealDto::new);
-        return mealDto;
+        return mealOpt.map(mealDtoConverter::convertToDto)
+                .orElseThrow();
     }
     private Double getAllFatByMeal(Meal meal){
         Double fat = 0.0;
@@ -34,8 +33,8 @@ public class MealService {
         List<Double> quantities = meal.getQuantities();
         for(int i = 0; i <products.size(); i++){
             Product product = products.get(0);
-            Nutrients nutrients = product.getNutrients();
-            fat += (nutrients.getFat()*quantities.get(i)/100);
+            MacroNutrients macroNutrients = product.getMacroNutrients();
+            fat += (macroNutrients.getFat()*quantities.get(i)/100);
         }
         return fat;
     }
@@ -46,8 +45,8 @@ public class MealService {
         List<Double> quantities = meal.getQuantities();
         for(int i = 0; i <products.size(); i++){
             Product product = products.get(0);
-            Nutrients nutrients = product.getNutrients();
-            protein += (nutrients.getProtein()*quantities.get(i)/100);
+            MacroNutrients macroNutrients = product.getMacroNutrients();
+            protein += (macroNutrients.getProtein()*quantities.get(i)/100);
         }
         return protein;
     }
@@ -58,8 +57,8 @@ public class MealService {
         List<Double> quantities = meal.getQuantities();
         for(int i = 0; i <products.size(); i++){
             Product product = products.get(0);
-            Nutrients nutrients = product.getNutrients();
-            carbohydrates += (nutrients.getCarbohydrates()*quantities.get(i)/100);
+            MacroNutrients macroNutrients = product.getMacroNutrients();
+            carbohydrates += (macroNutrients.getCarbohydrates()*quantities.get(i)/100);
         }
         return carbohydrates;
     }
@@ -70,8 +69,8 @@ public class MealService {
         List<Double> quantities = meal.getQuantities();
         for(int i = 0; i <products.size(); i++){
             Product product = products.get(0);
-            Nutrients nutrients = product.getNutrients();
-            fiber += (nutrients.getFiber()*quantities.get(i)/100);
+            MacroNutrients macroNutrients = product.getMacroNutrients();
+            fiber += (macroNutrients.getFiber()*quantities.get(i)/100);
         }
         return fiber;
     }
@@ -82,8 +81,8 @@ public class MealService {
         List<Double> quantities = meal.getQuantities();
         for(int i = 0; i <products.size(); i++){
             Product product = products.get(0);
-            Nutrients nutrients = product.getNutrients();
-            calories += (nutrients.getCalories()*quantities.get(i)/100);
+            MacroNutrients macroNutrients = product.getMacroNutrients();
+            calories += (macroNutrients.getCalories()*quantities.get(i)/100);
         }
         return calories;
     }
@@ -114,10 +113,33 @@ public class MealService {
 
     public Optional<MealDto> replaceMeal(MealDto mealDto, Long id) {
         if(mealRepository.existsById(id)){
-            Meal meal = mealDtoConverter.convertToUpdatedEntity(mealDto, id);
+            mealDto.setId(id);
+            Meal meal = mealDtoConverter.convertToEntity(mealDto);
             mealRepository.save(meal);
             return Optional.of(mealDtoConverter.convertToDto(meal));
         }else
             return Optional.empty();
+    }
+
+    void updateMeal(MealDto mealDto){
+        System.out.println(mealDto.getId());
+        Meal meal = mealDtoConverter.convertToEntity(mealDto);
+        System.out.println(meal.getId());
+        mealRepository.save(meal);
+    }
+
+    public boolean deleteMealById(Long id) {
+        if (mealRepository.existsById(id)){
+            mealRepository.deleteById(id);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public List<MealDto> getAllTodayMeals() {
+        return mealRepository.findAllByDate(LocalDate.now()).stream()
+                    .map(mealDtoConverter::convertToDto)
+                    .toList();
     }
 }

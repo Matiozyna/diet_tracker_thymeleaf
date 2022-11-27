@@ -7,7 +7,7 @@ import pl.mkuchciak.diet_app.product.Product;
 import pl.mkuchciak.diet_app.user.User;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +26,15 @@ public class Meal {
     @Convert(converter = DoubleListConverter.class)
     private List<Double> quantities;
 
-    private LocalDateTime date;
+    private LocalDate date;
+
+    private MealCategory category;
 
     public Meal(User user) {
         this.user = user;
         products = new ArrayList<>();
         quantities = new ArrayList<>();
-        date = LocalDateTime.now();
+        date = LocalDate.now();
     }
 
     public Meal() {
@@ -40,11 +42,12 @@ public class Meal {
         quantities = new ArrayList<>();
     }
 
-    public Meal(User user, List<Product> products, List<Double> quantities) {
+    public Meal(User user, List<Product> products, List<Double> quantities, MealCategory category) {
         this.user = user;
         this.products = products;
         this.quantities = quantities;
-        date = LocalDateTime.now();
+        date = LocalDate.now();
+        this.category = category;
     }
 
     public void addProductToMeal(Product product, double quantity){

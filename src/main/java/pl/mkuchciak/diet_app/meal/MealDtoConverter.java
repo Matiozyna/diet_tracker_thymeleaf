@@ -5,7 +5,7 @@ import pl.mkuchciak.diet_app.product.Product;
 import pl.mkuchciak.diet_app.product.ProductService;
 import pl.mkuchciak.diet_app.user.UserService;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -30,13 +30,20 @@ public class MealDtoConverter {
         );
         mealDto.setQuantities(meal.getQuantities());
         mealDto.setDate(meal.getDate());
+        mealDto.setCategory(meal.getCategory());
         return mealDto;
     }
 
     public Meal convertToEntity(MealDto mealDto){
         System.out.println("Convert To entity");
         Meal meal = new Meal();
-        meal.setDate(LocalDateTime.now());
+        if(mealDto.getId()!=null){
+            meal.setId(mealDto.getId());
+        }
+        if(mealDto.getDate()!=null){
+            meal.setDate(meal.getDate());
+        }
+        meal.setDate(LocalDate.now());
         meal.setUser(
                 userService.getUserById(mealDto.getUserId())
                         .orElseThrow()
@@ -48,13 +55,7 @@ public class MealDtoConverter {
                 meal.addProductToMeal(productByName.get(), mealDto.getQuantities().get(i));
             }
         }
-        return meal;
-    }
-
-    public Meal convertToUpdatedEntity(MealDto dto, Long id){
-        Meal meal =  convertToEntity(dto);
-        meal.setId(id);
-        meal.setDate(dto.getDate());
+        meal.setCategory(mealDto.getCategory());
         return meal;
     }
 }

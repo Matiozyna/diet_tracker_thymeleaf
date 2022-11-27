@@ -15,13 +15,26 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String firstName;
     private String lastName;
+
+    private String username;
+
+    private String email;
+
+    private String password;
+
     private Integer age;
 
-    public User(String firstName, String lastName, Integer age) {
+    //TODO weight, height, activity, targetNutrients
+
+    public User(String firstName, String lastName, String username, String email, String password, Integer age) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.username = username;
+        this.email = email;
+        this.password = password;
         this.age = age;
     }
 }

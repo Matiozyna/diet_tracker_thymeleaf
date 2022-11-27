@@ -1,7 +1,6 @@
 package pl.mkuchciak.diet_app.product;
 
 import lombok.*;
-import pl.mkuchciak.diet_app.product.nutrients.Nutrients;
 
 import java.util.HashMap;
 
@@ -14,4 +13,5 @@ public class ProductDto {
     private Long id;
     private String name;
     private HashMap<String, Double> nutrients;
+    private ProductCategory category;
 }

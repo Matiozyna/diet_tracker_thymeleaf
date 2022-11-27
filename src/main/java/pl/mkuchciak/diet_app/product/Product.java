@@ -1,9 +1,11 @@
 package pl.mkuchciak.diet_app.product;
 
 import lombok.*;
-import pl.mkuchciak.diet_app.product.nutrients.Nutrients;
+import pl.mkuchciak.diet_app.product.nutrients.MacroNutrients;
+import pl.mkuchciak.diet_app.product.nutrients.ProperNutrients;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 
 @Getter
@@ -17,13 +19,17 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotEmpty
     private String name;
     @OneToOne
-    private Nutrients nutrients;
+    @ProperNutrients
+    private MacroNutrients macroNutrients;
 
+    private ProductCategory category;
 
-    public Product(String name, Nutrients nutrients) {
+    public Product(String name, MacroNutrients macroNutrients, ProductCategory category) {
         this.name = name;
-        this.nutrients = nutrients;
+        this.macroNutrients = macroNutrients;
+        this.category = category;
     }
 }

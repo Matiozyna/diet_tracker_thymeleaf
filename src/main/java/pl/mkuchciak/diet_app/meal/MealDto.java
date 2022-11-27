@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -18,5 +18,6 @@ public class MealDto {
     private Long userId;
     private List<String> products;
     private List<Double> quantities;
-    private LocalDateTime date;
+    private LocalDate date;
+    private MealCategory category;
 }

@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Nutrients {
+public class MacroNutrients {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,19 +22,19 @@ public class Nutrients {
     private Double fiber = 0.0;
 
 
-    public Nutrients(Double fat, Double carbohydrates, Double protein) {
+    public MacroNutrients(Double fat, Double carbohydrates, Double protein) {
         this.fat = fat;
         this.carbohydrates = carbohydrates;
         this.protein = protein;
         generateCalories();
     }
 
-    public Nutrients(Double fat, Double carbohydrates, Double protein, Double fiber) {
+    public MacroNutrients(Double fat, Double carbohydrates, Double protein, Double fiber) {
         this(fat,carbohydrates,protein);
         this.fiber = fiber;
     }
 
-    public Nutrients(Double fat, Double carbohydrates, Double protein, Double calories, Double fiber) {
+    public MacroNutrients(Double fat, Double carbohydrates, Double protein, Double calories, Double fiber) {
         this.fat = fat;
         this.carbohydrates = carbohydrates;
         this.protein = protein;
